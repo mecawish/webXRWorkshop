@@ -11,6 +11,7 @@ const renderer = new WebGLRenderer({
 // Material
 const texture = new TextureLoader().load("assets/images/globe/earthmap4k.jpg");
 const bumpMap = new TextureLoader().load("assets/images/globe/earthbump4k.jpg");
+const cTexture = new TextureLoader().load("assets/images/globe/earthclouds4k.png");
 // const material = new MeshBasicMaterial({
 const material = new MeshPhongMaterial({
     // color: 0xffff00 * Math.random(),
@@ -20,9 +21,16 @@ const material = new MeshPhongMaterial({
     bumpScale: 25,
     map: texture,
 });
+const cMaterial = new MeshPhongMaterial({
+    opacity: 0.8,
+    transparent: true,
+    map: cTexture,
+});
 // Geometry radius, width segment, height segment
 const geometry = new SphereGeometry(0.5, 14, 14).translate(0, 0.1, 0);
+const cGeometry = new SphereGeometry(0.55, 20, 20).translate(0, 0.1, 0);
 const earth = new Mesh(geometry, material);
+const clouds = new Mesh(cGeometry, cMaterial);
 init();
 animate();
 function init() {
@@ -33,7 +41,9 @@ function init() {
     scene.add(light);
     window.addEventListener("resize", onWindowResize, false);
     earth.position.z = -2;
+    clouds.position.z = -2;
     scene.add(earth);
+    scene.add(clouds);
 }
 function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
@@ -45,6 +55,7 @@ function animate() {
     requestAnimationFrame(animate);
     // renderer.setAnimationLoop(animate);
     earth.rotation.y += 0.001;
+    clouds.rotation.y += 0.002;
     render();
 }
 function render() {
